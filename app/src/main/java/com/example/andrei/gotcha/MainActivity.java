@@ -52,18 +52,32 @@ public class MainActivity extends AppCompatActivity {
             if(isListening) {
                 isListening = false;
                 tvTest.setText("Listening");
+                startRecording();
             }
             else{
                 isListening = true;
                 tvTest.setText("Not Listening");
+                stopRecording();
             }
 
         }
     };
 
+    public void startRecording(){
+
+        Intent serviceIntent = new Intent(getBaseContext(),RecorderService.class);
+        startService(serviceIntent);
+
+
+    }
+
+    public void stopRecording(){
+        stopService(new Intent(getBaseContext(), RecorderService.class));
+    }
+
+
     public void startHeadsetListening() {
         Intent serviceIntent = new Intent(getBaseContext(),HeadsetMonitoringService.class);
-        //serviceIntent.setAction("com.example.andrei.gotcha.HeadsetMonitoringService");
         startService(serviceIntent);
     }
 
