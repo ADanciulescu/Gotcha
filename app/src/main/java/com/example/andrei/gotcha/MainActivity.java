@@ -1,7 +1,12 @@
 package com.example.andrei.gotcha;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +19,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView tvTest;
+    private boolean isListening = false;
     private int notification_id = 1;
 
     @Override
@@ -28,6 +37,39 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        startHeadsetListening();
+        initHeadsetReceiver();
+    }
+
+    public void initHeadsetReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("headsetStateChange"));
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra("message");
+            Log.d("receiver", "Got message: " + message);
+
+            if(isListening) {
+                isListening = false;
+                tvTest.setText("Listening");
+            }
+            else{
+                isListening = true;
+                tvTest.setText("Not Listening");
+            }
+
+        }
+    };
+
+    public void startHeadsetListening() {
+        Intent serviceIntent = new Intent(getBaseContext(),HeadsetMonitoringService.class);
+        //serviceIntent.setAction("com.example.andrei.gotcha.HeadsetMonitoringService");
+        startService(serviceIntent);
     }
 
     @Override
@@ -61,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static class PlaceholderFragment extends Fragment {
-
+        tvTest = (TextView)getView().findViewById(R.id.tvTest);
         public PlaceholderFragment() {
         }
 
@@ -121,6 +163,13 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(notification_id, notification);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
 
 }
