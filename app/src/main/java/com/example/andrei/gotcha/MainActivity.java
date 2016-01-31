@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-//    public TextView tvTest =(TextView)findViewById(R.id.tvTest);
+    public TextView tvTest;
     private boolean isListening = false;
     private int notification_id = 1;
 
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tvTest =(TextView)findViewById(R.id.tvTest);
         startHeadsetListening();
         initHeadsetReceiver();
     }
@@ -50,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
             if(isListening) {
                 isListening = false;
-//                tvTest.setText("Listening");
+                tvTest.setText("Listening");
             }
             else{
                 isListening = true;
-//                tvTest.setText("Not Listening");
+                tvTest.setText("Not Listening");
             }
 
         }
