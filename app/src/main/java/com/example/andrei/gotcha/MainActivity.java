@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvTest;
+//    public TextView tvTest =(TextView)findViewById(R.id.tvTest);
     private boolean isListening = false;
     private int notification_id = 1;
 
@@ -32,12 +32,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-
         startHeadsetListening();
         initHeadsetReceiver();
     }
@@ -56,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
             if(isListening) {
                 isListening = false;
-                tvTest.setText("Listening");
+//                tvTest.setText("Listening");
             }
             else{
                 isListening = true;
-                tvTest.setText("Not Listening");
+//                tvTest.setText("Not Listening");
             }
 
         }
@@ -100,18 +94,6 @@ public class MainActivity extends AppCompatActivity {
         notification_id++;
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public static class PlaceholderFragment extends Fragment {
-        tvTest = (TextView)getView().findViewById(R.id.tvTest);
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_main, container, false);
-        }
     }
 
     private void presentFancyNotification(int visibility, int icon, String title, String text) {
