@@ -2,7 +2,6 @@ package com.example.andrei.gotcha;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,13 +10,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             presentNotification(Notification.VISIBILITY_PRIVATE, R.drawable.priv8, getString(R.string.private_title), getString(R.string.private_text));
             return true;
         } else if (id == R.id.public_notification) {
-            presentNotification(Notification.VISIBILITY_PUBLIC, R.drawable.publix, getString(R.string.public_title), getString(R.string.public_text));
+            presentFancyNotification(Notification.VISIBILITY_PUBLIC, R.drawable.publix, getString(R.string.public_title), getString(R.string.public_text));
             return true;
         } else if (id == R.id.secret_notification) {
             presentNotification(Notification.VISIBILITY_SECRET, R.drawable.secret, getString(R.string.secret_title), getString(R.string.secret_text));
@@ -75,6 +70,23 @@ public class MainActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_main, container, false);
         }
+    }
+
+    private void presentFancyNotification(int visibility, int icon, String title, String text) {
+
+        Intent iLaunchMain = new Intent(this,MainActivity.class);
+        PendingIntent piLaunchMain = PendingIntent.getActivity(this.getBaseContext(),0,iLaunchMain,0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setCategory(Notification.CATEGORY_MESSAGE)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(icon)
+                .setAutoCancel(true)
+                .setContentIntent(piLaunchMain)
+                .setVisibility(visibility).build();
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(notification_id, notification);
     }
 
     private void presentNotification(int visibility, int icon, String title, String text) {
