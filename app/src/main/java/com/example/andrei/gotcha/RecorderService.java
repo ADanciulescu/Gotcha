@@ -21,7 +21,7 @@ public class RecorderService extends Service {
     @Override
     public void onCreate() {
         recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/gotcha_" + System.currentTimeMillis() + ".3gp");

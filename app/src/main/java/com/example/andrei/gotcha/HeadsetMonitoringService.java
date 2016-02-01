@@ -2,6 +2,7 @@ package com.example.andrei.gotcha;
 
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -12,6 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by andrei on 2016-01-30.
@@ -27,11 +31,15 @@ public class HeadsetMonitoringService extends Service {
 
         headsetStateReceiver = new HeadsetStateBroadcastReceiver();
 
-        final IntentFilter filter = new IntentFilter();
-        for (String action: HeadsetStateBroadcastReceiver.HEADPHONE_ACTIONS) {
-            filter.addAction(action);
-        }
-        registerReceiver(headsetStateReceiver,filter);
+//        final IntentFilter filter = new IntentFilter();
+//        for (String action: HeadsetStateBroadcastReceiver.HEADPHONE_ACTIONS) {
+//            filter.addAction(action);
+//        }
+//        registerReceiver(headsetStateReceiver,filter);
+
+        forceSpeakers();
+        forceMicrophone();
+
 
         Log.d("TAG", "MonitorService");
         session = new MediaSession(getBaseContext(), "TAG");
@@ -60,6 +68,35 @@ public class HeadsetMonitoringService extends Service {
 
         session.setActive(true);
 
+    }
+
+    public void forceMicrophone(){
+        AudioManager audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setMicrophoneMute(false);
+    }
+
+    public void forceSpeakers(){
+        final int FOR_MEDIA = 1;
+        final int FORCE_NONE = 0;
+        final int FORCE_SPEAKER = 1;
+
+        Class audioSystemClass = null;
+        try {
+            audioSystemClass = Class.forName("android.media.AudioSystem");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Method setForceUse = null;
+        try {
+            setForceUse = audioSystemClass.getMethod("setForceUse", int.class, int.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        try {
+            setForceUse.invoke(null, FOR_MEDIA, FORCE_SPEAKER);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
