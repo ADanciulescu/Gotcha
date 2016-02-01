@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
+import java.security.Timestamp;
 
 /**
  * Created by andrei on 2016-01-31.
@@ -23,15 +24,16 @@ public class RecorderService extends Service {
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        recorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myRecording.3gp");
+        recorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/gotcha_" + System.currentTimeMillis() + ".3gp");
 
         try {
             recorder.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Log.d("recorder", Environment.getExternalStorageDirectory().getAbsolutePath() + "/myRecording.3gp");
-        Log.d("recorder", Environment.getDataDirectory().getAbsolutePath() + "/myRecording.3gp");
+        Log.d("recorder", Environment.getDataDirectory().getAbsolutePath() + "/gotcha_" + Long.toString(System.currentTimeMillis()) + ".3gp");
 
         if(!isRecording) {
             recorder.start();   // Recording is now started

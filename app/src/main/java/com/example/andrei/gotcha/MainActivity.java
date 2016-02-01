@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvTest =(TextView)findViewById(R.id.tvTest);
+        tvTest.setText("Not Listening");
         startHeadsetListening();
         initHeadsetReceiver();
     }
@@ -51,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
             if(isListening) {
                 isListening = false;
-                tvTest.setText("Listening");
-                startRecording();
+                tvTest.setText("Not Listening");
+                stopRecording();
             }
             else{
                 isListening = true;
-                tvTest.setText("Not Listening");
-                stopRecording();
+                tvTest.setText("Listening");
+                startRecording();
             }
 
         }
