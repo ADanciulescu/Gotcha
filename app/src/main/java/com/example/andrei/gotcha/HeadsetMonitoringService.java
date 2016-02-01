@@ -24,18 +24,10 @@ public class HeadsetMonitoringService extends Service {
 
 
     MediaSession session;
-    HeadsetStateBroadcastReceiver headsetStateReceiver;
 
     @Override
     public void onCreate() {
 
-        headsetStateReceiver = new HeadsetStateBroadcastReceiver();
-
-//        final IntentFilter filter = new IntentFilter();
-//        for (String action: HeadsetStateBroadcastReceiver.HEADPHONE_ACTIONS) {
-//            filter.addAction(action);
-//        }
-//        registerReceiver(headsetStateReceiver,filter);
 
         forceSpeakers();
         forceMicrophone();
@@ -58,13 +50,6 @@ public class HeadsetMonitoringService extends Service {
         session.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
                 MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
-        PlaybackState state = new PlaybackState.Builder()
-                .setActions(
-                        PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PLAY_PAUSE |
-                                PlaybackState.ACTION_PLAY_FROM_MEDIA_ID | PlaybackState.ACTION_PAUSE |
-                                PlaybackState.ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_SKIP_TO_PREVIOUS)
-                .build();
-        session.setPlaybackState(state);
 
         session.setActive(true);
 
