@@ -1,5 +1,7 @@
 package com.example.andrei.gotcha;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,6 +12,7 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +27,7 @@ public class HeadsetMonitoringService extends Service {
 
 
     MediaSession session;
+    private int notification_id = 1;
 
     @Override
     public void onCreate() {
@@ -33,15 +37,16 @@ public class HeadsetMonitoringService extends Service {
         forceMicrophone();
 
 
-        Log.d("TAG", "MonitorService");
+        Log.d("MonitorService", "Created");
         session = new MediaSession(getBaseContext(), "TAG");
         session.setCallback(new MediaSession.Callback() {
             @Override
             public boolean onMediaButtonEvent(@NonNull final Intent mediaButtonIntent) {
                 KeyEvent event = mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                Log.i("headsetService", "SessionCallback.onMediaButton()...  event = " + event);
+                Log.d("MonitorService", "SessionCallback.onMediaButton()...  event = " + event);
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(new Intent("headsetStateChange"));
+                    //LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(new Intent("MediaButtonPress"));
+                    mediaButtonPress();
                 }
                 Log.i("TAG", "GOT EVENT");
                 return super.onMediaButtonEvent(mediaButtonIntent);
@@ -53,6 +58,23 @@ public class HeadsetMonitoringService extends Service {
 
         session.setActive(true);
 
+    }
+
+    public void mediaButtonPress(){
+        presentNotification(Notification.VISIBILITY_PRIVATE, R.drawable.priv8, getString(R.string.private_title), getString(R.string.private_text));
+    }
+
+    private void presentNotification(int visibility, int icon, String title, String text) {
+        Notification notification = new NotificationCompat.Builder(this)
+                .setCategory(Notification.CATEGORY_MESSAGE)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(icon)
+                .setAutoCancel(true)
+                .setVisibility(visibility).build();
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(notification_id, notification);
     }
 
     public void forceMicrophone(){
@@ -91,6 +113,7 @@ public class HeadsetMonitoringService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.d("MonitorService", "Destroyed");
         session.release();
         super.onDestroy();
     }
@@ -100,5 +123,20 @@ public class HeadsetMonitoringService extends Service {
     public IBinder onBind(final Intent intent) {
         return null;
     }
+
+    public void startRecording(){
+
+        Intent serviceIntent = new Intent(getBaseContext(),RecorderService.class);
+        startService(serviceIntent);
+
+
+    }
+
+    public void stopRecording(){
+        stopService(new Intent(getBaseContext(), RecorderService.class));
+    }
+
+
+
 
 }

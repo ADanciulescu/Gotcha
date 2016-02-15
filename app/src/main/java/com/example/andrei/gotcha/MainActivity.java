@@ -15,16 +15,16 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
 
     public TextView tvTest;
+    private Button btnServiceOn;
+    private Button btnServiceOff;
     private boolean isListening = false;
     private int notification_id = 1;
 
@@ -32,15 +32,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setupButtons();
+
+
         tvTest =(TextView)findViewById(R.id.tvTest);
         tvTest.setText("Not Listening");
-        startHeadsetListening();
-        initHeadsetReceiver();
+        initMediaButtonReceiver();
     }
 
-    public void initHeadsetReceiver() {
+    private void setupButtons(){
+        btnServiceOn = (Button)findViewById(R.id.btnServiceOn);
+        btnServiceOff = (Button)findViewById(R.id.btnServiceOff);
+
+        btnServiceOn.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                startMediaButtonListening();
+            }
+        });
+
+        btnServiceOff.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    }
+
+//delete later
+    public void initMediaButtonReceiver() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter("headsetStateChange"));
+                new IntentFilter("MediaButtonPress"));
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -53,31 +77,21 @@ public class MainActivity extends AppCompatActivity {
             if(isListening) {
                 isListening = false;
                 tvTest.setText("Not Listening");
-                stopRecording();
+                //stopRecording();
             }
             else{
                 isListening = true;
                 tvTest.setText("Listening");
-                startRecording();
+                //startRecording();
             }
 
         }
     };
 
-    public void startRecording(){
-
-        Intent serviceIntent = new Intent(getBaseContext(),RecorderService.class);
-        startService(serviceIntent);
 
 
-    }
 
-    public void stopRecording(){
-        stopService(new Intent(getBaseContext(), RecorderService.class));
-    }
-
-
-    public void startHeadsetListening() {
+    public void startMediaButtonListening() {
         Intent serviceIntent = new Intent(getBaseContext(),HeadsetMonitoringService.class);
         startService(serviceIntent);
     }

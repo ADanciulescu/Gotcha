@@ -1,0 +1,12 @@
+
+MainActivity:
+-App settings
+-Starts/ Turns off MB service
+
+Media Button Service
+Started by main activity(should outlive it)
+Starts recorder service on MB press
+Stops recorder on MB press
+
+Recorder service
+records and saves recording
