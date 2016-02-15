@@ -32,6 +32,11 @@
         android:id="@+id/btnServiceOff"
         android:layout_alignTop="@+id/btnServiceOn"
         android:layout_toEndOf="@+id/btnServiceOn" />
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play Last Rec"
+        android:id="@+id/btnPlayRec"
+        android:layout_below="@+id/btnServiceOn" />
 
 </RelativeLayout>

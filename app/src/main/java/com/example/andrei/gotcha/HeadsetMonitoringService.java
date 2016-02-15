@@ -27,7 +27,8 @@ public class HeadsetMonitoringService extends Service {
 
 
     MediaSession session;
-    private int notification_id = 1;
+    private int notification_id = 2;
+    private boolean isRecording = false;
 
     @Override
     public void onCreate() {
@@ -61,7 +62,20 @@ public class HeadsetMonitoringService extends Service {
     }
 
     public void mediaButtonPress(){
-        presentNotification(Notification.VISIBILITY_PRIVATE, R.drawable.priv8, getString(R.string.private_title), getString(R.string.private_text));
+        if (isRecording){
+            stopRecording();
+            dismissNotification();
+        }
+        else {
+            startRecording();
+            presentNotification(Notification.VISIBILITY_PUBLIC, R.drawable.publix, getString(R.string.app_name), "Recording");
+        }
+        isRecording = !isRecording;
+    }
+
+    private void dismissNotification(){
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(notification_id);
     }
 
     private void presentNotification(int visibility, int icon, String title, String text) {
@@ -125,18 +139,11 @@ public class HeadsetMonitoringService extends Service {
     }
 
     public void startRecording(){
-
         Intent serviceIntent = new Intent(getBaseContext(),RecorderService.class);
         startService(serviceIntent);
-
-
     }
 
     public void stopRecording(){
         stopService(new Intent(getBaseContext(), RecorderService.class));
     }
-
-
-
-
 }
