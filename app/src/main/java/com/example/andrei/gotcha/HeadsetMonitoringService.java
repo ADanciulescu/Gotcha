@@ -46,7 +46,6 @@ public class HeadsetMonitoringService extends Service {
                 KeyEvent event = mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
                 Log.d("MonitorService", "SessionCallback.onMediaButton()...  event = " + event);
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    //LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(new Intent("MediaButtonPress"));
                     mediaButtonPress();
                 }
                 Log.i("TAG", "GOT EVENT");
@@ -98,7 +97,6 @@ public class HeadsetMonitoringService extends Service {
 
     public void forceSpeakers(){
         final int FOR_MEDIA = 1;
-        final int FORCE_NONE = 0;
         final int FORCE_SPEAKER = 1;
 
         Class audioSystemClass = null;

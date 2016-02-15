@@ -1,14 +1,9 @@
 package com.example.andrei.gotcha;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -92,46 +87,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.private_notification) {
-            presentNotification(Notification.VISIBILITY_PRIVATE, R.drawable.priv8, getString(R.string.private_title), getString(R.string.private_text));
-            return true;
-        } else if (id == R.id.public_notification) {
-            presentFancyNotification(Notification.VISIBILITY_PUBLIC, R.drawable.publix, getString(R.string.public_title), getString(R.string.public_text));
-            return true;
-        } else if (id == R.id.secret_notification) {
-            presentNotification(Notification.VISIBILITY_SECRET, R.drawable.secret, getString(R.string.secret_title), getString(R.string.secret_text));
-            return true;
-        } else if (id == R.id.heads_up_notification) {
-            presentHeadsUpNotification(Notification.VISIBILITY_PUBLIC, R.drawable.cubs, getString(R.string.heads_up_title), getString(R.string.heads_up_text));
-            return true;
-        }
-        notification_id++;
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void presentFancyNotification(int visibility, int icon, String title, String text) {
-
-        Intent iLaunchMain = new Intent(this,MainActivity.class);
-        PendingIntent piLaunchMain = PendingIntent.getActivity(this.getBaseContext(),0,iLaunchMain,0);
-        Notification notification = new NotificationCompat.Builder(this)
-                .setCategory(Notification.CATEGORY_MESSAGE)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSmallIcon(icon)
-                .setAutoCancel(true)
-                .setContentIntent(piLaunchMain)
-                .setVisibility(visibility).build();
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(notification_id, notification);
-    }
 
     private void presentNotification(int visibility, int icon, String title, String text) {
         Notification notification = new NotificationCompat.Builder(this)
@@ -141,27 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 .setSmallIcon(icon)
                 .setAutoCancel(true)
                 .setVisibility(visibility).build();
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(notification_id, notification);
-    }
-
-    private void presentHeadsUpNotification(int visibility, int icon, String title, String text) {
-        Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
-        notificationIntent.setData(Uri.parse("http://www.wgn.com"));
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-        Notification notification = new NotificationCompat.Builder(this)
-                .setCategory(Notification.CATEGORY_PROMO)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSmallIcon(icon)
-                .setAutoCancel(true)
-                .setVisibility(visibility)
-                .addAction(android.R.drawable.ic_menu_view, getString(R.string.view_details), contentIntent)
-                .setContentIntent(contentIntent)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}).build();
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(notification_id, notification);

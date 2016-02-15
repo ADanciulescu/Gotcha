@@ -10,3 +10,12 @@ Stops recorder on MB press
 
 Recorder service
 records and saves recording
+
+Features TODO:
+
+1. View/Play all recordings
+2. App Icon/ Notification Icons
+3. Make Activity Beautiful
+4. Allow service shutdown through notifications
+5. # button press customization
+6. Get better name
